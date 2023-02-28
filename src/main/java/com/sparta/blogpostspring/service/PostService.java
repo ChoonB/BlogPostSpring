@@ -1,7 +1,5 @@
 package com.sparta.blogpostspring.service;
 
-import com.sparta.blogpostspring.dto.PostDeleteRequestDto;
-import com.sparta.blogpostspring.dto.PostDeleteResponseDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.Post;

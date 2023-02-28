@@ -1,7 +1,5 @@
 package com.sparta.blogpostspring.cotroller;
 
-import com.sparta.blogpostspring.dto.PostDeleteRequestDto;
-import com.sparta.blogpostspring.dto.PostDeleteResponseDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.Post;
@@ -45,7 +43,7 @@ public class PostController {
     }
 
 //    선택 게시글 수정 API
-    @PutMapping("/api/post/{id}")
+    @PostMapping("/api/post/{id}")
     public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) throws Exception {
         return postService.update(id, postRequestDto);
     }
