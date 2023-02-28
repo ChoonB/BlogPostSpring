@@ -25,4 +25,8 @@ public class PostService {
         postRepository.save(post);
         return post;
     }
+
+    public Post getSelectedPost(Long id) {
+        return postRepository.findByIdEquals(id);
+    }
 }

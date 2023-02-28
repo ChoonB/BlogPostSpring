@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -32,5 +33,13 @@ public class Post extends Timestamped{
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.password = postRequestDto.getPassword();
+    }
+
+    public LocalDateTime getCreatedAt(){
+        return super.getCreatedAt();
+    }
+
+    public LocalDateTime getModifiedAt(){
+        return super.getModifiedAt();
     }
 }

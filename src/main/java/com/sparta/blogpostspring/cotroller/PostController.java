@@ -4,10 +4,7 @@ import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.entity.Post;
 import com.sparta.blogpostspring.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -24,18 +21,28 @@ public class PostController {
         return new ModelAndView("index");
     }
 
+//  아래의 메서드들 다 Dto로 반환 아직 못함. 이부분 고민해보기
+
 //    전체게시글 조회 API
     @GetMapping("/api/posts")
     public List<Post> getPosts() {
         return postService.getPosts();
     }
 
-//    게시글 작성
+//    게시글 작성 API
     @PostMapping("/api/post")
     public Post createPost(@RequestBody PostRequestDto postRequestDto){
         return postService.createpost(postRequestDto);
     }
 
+//    선택 게시글 조회 API
+    @GetMapping("/api/post/{id}")
+    public Post getSelectedPost(@PathVariable Long id){
+        return postService.getSelectedPost(id);
+    }
+
+//    선택 게시글 수정 API
+    @PutMapping("/api/post/{id}")
 
 
 
