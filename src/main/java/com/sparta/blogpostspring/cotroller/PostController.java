@@ -1,6 +1,7 @@
 package com.sparta.blogpostspring.cotroller;
 
 import com.sparta.blogpostspring.dto.PostRequestDto;
+import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.Post;
 import com.sparta.blogpostspring.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class PostController {
 
 //    전체게시글 조회 API
     @GetMapping("/api/posts")
-    public List<Post> getPosts() {
+    public List<PostResponseDto> getPosts() {
         return postService.getPosts();
     }
 
@@ -37,13 +38,15 @@ public class PostController {
 
 //    선택 게시글 조회 API
     @GetMapping("/api/post/{id}")
-    public Post getSelectedPost(@PathVariable Long id){
+    public PostResponseDto getSelectedPost(@PathVariable Long id){
         return postService.getSelectedPost(id);
     }
 
 //    선택 게시글 수정 API
     @PutMapping("/api/post/{id}")
-
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) throws Exception {
+        return postService.update(id, postRequestDto);
+    }
 
 
 

@@ -35,11 +35,19 @@ public class Post extends Timestamped{
         this.password = postRequestDto.getPassword();
     }
 
+//    타임스탬프 2요소 게터 생성
     public LocalDateTime getCreatedAt(){
         return super.getCreatedAt();
     }
 
     public LocalDateTime getModifiedAt(){
         return super.getModifiedAt();
+    }
+
+    public void update(PostRequestDto postRequestDto) {
+        this.author = postRequestDto.getAuthor();
+        this.content = postRequestDto.getContent();
+        this.title = postRequestDto.getTitle();
+
     }
 }

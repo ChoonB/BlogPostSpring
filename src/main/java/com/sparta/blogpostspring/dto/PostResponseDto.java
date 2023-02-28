@@ -16,6 +16,7 @@ public class PostResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
+//    생성자
     public PostResponseDto(Post post) {
 
         this.author = post.getAuthor();
