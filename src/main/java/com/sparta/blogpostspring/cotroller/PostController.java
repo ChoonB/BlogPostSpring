@@ -1,9 +1,12 @@
 package com.sparta.blogpostspring.cotroller;
 
+import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.entity.Post;
 import com.sparta.blogpostspring.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,6 +29,13 @@ public class PostController {
     public List<Post> getPosts() {
         return postService.getPosts();
     }
+
+//    게시글 작성
+    @PostMapping("/api/post")
+    public Post createPost(@RequestBody PostRequestDto postRequestDto){
+        return postService.createpost(postRequestDto);
+    }
+
 
 
 
