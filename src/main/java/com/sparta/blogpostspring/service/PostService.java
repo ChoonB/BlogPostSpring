@@ -47,6 +47,7 @@ public class PostService {
 
     }
 
+    @Transactional
     public PostResponseDto update(Long id, PostRequestDto postRequestDto) throws Exception {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
@@ -59,16 +60,17 @@ public class PostService {
 
     }
 
-    public PostDeleteResponseDto deletePost(Long id, PostDeleteRequestDto deleteRequestDto) throws Exception {
+    @Transactional
+    public boolean deletePost(Long id, String password) throws Exception {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
-        if(!deleteRequestDto.getPassword().equals(post.getPassword())){
+        if(!password.equals(post.getPassword())){
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
         postRepository.deleteById(id);
-        PostDeleteResponseDto deleteResponseDto = new PostDeleteResponseDto(true);
-        return deleteResponseDto;
+
+        return true;
 
     }
 }

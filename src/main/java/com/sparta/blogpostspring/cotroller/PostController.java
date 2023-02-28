@@ -51,9 +51,9 @@ public class PostController {
     }
 
 //    선택 게시글 삭제 API
-    @DeleteMapping("/api/post/{id}")
-    public PostDeleteResponseDto deletePost(@PathVariable Long id, @RequestBody PostDeleteRequestDto deleteRequestDto) throws Exception {
-        return postService.deletePost(id, deleteRequestDto);
+    @DeleteMapping("/api/post/{id}/{password}")
+    public boolean deletePost(@PathVariable Long id, @PathVariable String password) throws Exception {
+        return postService.deletePost(id, password);
     }
 
 }
