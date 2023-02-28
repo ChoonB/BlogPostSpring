@@ -56,4 +56,16 @@ public class PostService {
         return new PostResponseDto(post);
 
     }
+
+    public Boolean deletePost(Long id, String password) throws Exception {
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+        );
+        if(password != post.getPassword()){
+            throw new Exception("비밀번호가 일치하지 않습니다.");
+        }
+        postRepository.deleteById(id);
+        return true;
+
+    }
 }

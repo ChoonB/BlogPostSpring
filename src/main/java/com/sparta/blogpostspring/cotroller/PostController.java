@@ -48,6 +48,10 @@ public class PostController {
         return postService.update(id, postRequestDto);
     }
 
-
+//    선택 게시글 삭제 API
+    @DeleteMapping("/api/post/{id}")
+    public Boolean deletePost(@PathVariable Long id, String password) throws Exception {
+        return postService.deletePost(id, password);
+    }
 
 }
