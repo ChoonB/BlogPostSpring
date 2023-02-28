@@ -17,10 +17,10 @@ public class PostController {
     private final PostService postService;
 
 //    홈으로 index.html 이거 필요한가? index.html이랑 이거 필요없어보임..
-    @GetMapping("/")
-    public ModelAndView home() {
-        return new ModelAndView("index");
-    }
+//    @GetMapping("/")
+//    public ModelAndView home() {
+//        return new ModelAndView("index");
+//    }
 
 //  아래의 메서드들 다 Dto로 반환 일단 시도는함
 
@@ -32,7 +32,7 @@ public class PostController {
 
 //    게시글 작성 API
     @PostMapping("/api/post")
-    public Post createPost(@RequestBody PostRequestDto postRequestDto){
+    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto){
         return postService.createpost(postRequestDto);
     }
 
@@ -43,7 +43,7 @@ public class PostController {
     }
 
 //    선택 게시글 수정 API
-    @PostMapping("/api/post/{id}")
+    @PutMapping("/api/post/{id}")
     public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) throws Exception {
         return postService.update(id, postRequestDto);
     }
