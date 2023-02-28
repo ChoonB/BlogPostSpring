@@ -34,7 +34,7 @@ public class PostController {
 //    게시글 작성 API
     @PostMapping("/api/post")
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto){
-        return postService.createpost(postRequestDto);
+        return postService.createPost(postRequestDto);
     }
 
 //    선택 게시글 조회 API

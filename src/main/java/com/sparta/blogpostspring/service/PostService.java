@@ -30,7 +30,7 @@ public class PostService {
 
 //    게시글 작성 메서드
     @Transactional
-    public PostResponseDto createpost(PostRequestDto postRequestDto) {
+    public PostResponseDto createPost(PostRequestDto postRequestDto) {
         Post post = new Post(postRequestDto);
         postRepository.save(post);
         return new PostResponseDto(post);
