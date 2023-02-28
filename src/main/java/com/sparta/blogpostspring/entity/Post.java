@@ -3,10 +3,12 @@ package com.sparta.blogpostspring.entity;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 @Entity
 @NoArgsConstructor
@@ -45,9 +47,8 @@ public class Post extends Timestamped{
     }
 
     public void update(PostRequestDto postRequestDto) {
-        this.author = postRequestDto.getAuthor();
-        this.content = postRequestDto.getContent();
-        this.title = postRequestDto.getTitle();
-
+        this.setAuthor(postRequestDto.getAuthor());
+        this.setTitle(postRequestDto.getTitle());
+        this.setContent(postRequestDto.getContent());
     }
 }

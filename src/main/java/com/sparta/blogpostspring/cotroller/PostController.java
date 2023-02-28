@@ -22,7 +22,7 @@ public class PostController {
         return new ModelAndView("index");
     }
 
-//  아래의 메서드들 다 Dto로 반환 아직 못함. 이부분 고민해보기
+//  아래의 메서드들 다 Dto로 반환 일단 시도는함
 
 //    전체게시글 조회 API
     @GetMapping("/api/posts")
