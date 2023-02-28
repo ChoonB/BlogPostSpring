@@ -1,5 +1,7 @@
 package com.sparta.blogpostspring.service;
 
+import com.sparta.blogpostspring.dto.PostDeleteRequestDto;
+import com.sparta.blogpostspring.dto.PostDeleteResponseDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.Post;
@@ -57,15 +59,16 @@ public class PostService {
 
     }
 
-    public Boolean deletePost(Long id, String password) throws Exception {
+    public PostDeleteResponseDto deletePost(Long id, PostDeleteRequestDto deleteRequestDto) throws Exception {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
-        if(!password.equals(post.getPassword())){
+        if(!deleteRequestDto.getPassword().equals(post.getPassword())){
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
         postRepository.deleteById(id);
-        return true;
+        PostDeleteResponseDto deleteResponseDto = new PostDeleteResponseDto(true);
+        return deleteResponseDto;
 
     }
 }
