@@ -1,5 +1,6 @@
 package com.sparta.blogpostspring.cotroller;
 
+import com.sparta.blogpostspring.dto.PostDeleteDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.Post;
@@ -49,9 +50,14 @@ public class PostController {
     }
 
 //    선택 게시글 삭제 API
-    @DeleteMapping("/api/post/{id}/{password}")
-    public boolean deletePost(@PathVariable Long id, @PathVariable String password) throws Exception {
-        return postService.deletePost(id, password);
+//    @DeleteMapping("/api/post/{id}/{password}")
+//    public boolean deletePost(@PathVariable Long id, @PathVariable String password) throws Exception {
+//        return postService.deletePost(id, password);
+//    }
+
+    @DeleteMapping("/api/post/{id}")
+    public boolean deletePost2(@PathVariable Long id, @RequestBody PostDeleteDto deleteDto) throws Exception {
+        return postService.deletePost2(id, deleteDto.getPassword());
     }
 
 }
