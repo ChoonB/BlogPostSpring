@@ -38,18 +38,14 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostResponseDto getSelectedPost(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
+        Post post = findPostById(id);
         return new PostResponseDto(post);
 
     }
 
     @Transactional
     public PostResponseDto update(Long id, PostRequestDto postRequestDto) throws Exception {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
+        Post post = findPostById(id);
         if(!postRequestDto.getPassword().equals(post.getPassword())){
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
@@ -74,9 +70,7 @@ public class PostService {
 
     @Transactional
     public boolean deletePost2(Long id, String password) throws Exception {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
+        Post post = findPostById(id);
         if(!password.equals(post.getPassword())){
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
