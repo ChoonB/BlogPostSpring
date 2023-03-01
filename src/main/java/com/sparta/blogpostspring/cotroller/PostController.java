@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class PostController {
 
     private final PostService postService;
@@ -26,25 +27,25 @@ public class PostController {
 //  아래의 메서드들 다 Dto로 반환 일단 시도는함
 
 //    전체게시글 조회 API
-    @GetMapping("/api/posts")
+    @GetMapping("/posts")
     public List<PostResponseDto> getPosts() {
         return postService.getPosts();
     }
 
 //    게시글 작성 API
-    @PostMapping("/api/post")
+    @PostMapping("/post")
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto){
         return postService.createPost(postRequestDto);
     }
 
 //    선택 게시글 조회 API
-    @GetMapping("/api/post/{id}")
+    @GetMapping("/post/{id}")
     public PostResponseDto getSelectedPost(@PathVariable Long id){
         return postService.getSelectedPost(id);
     }
 
 //    선택 게시글 수정 API
-    @PutMapping("/api/post/{id}")
+    @PutMapping("/post/{id}")
     public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) throws Exception {
         return postService.update(id, postRequestDto);
     }
@@ -55,7 +56,7 @@ public class PostController {
 //        return postService.deletePost(id, password);
 //    }
 
-    @DeleteMapping("/api/post/{id}")
+    @DeleteMapping("/post/{id}")
     public boolean deletePost2(@PathVariable Long id, @RequestBody PostDeleteDto deleteDto) throws Exception {
         return postService.deletePost2(id, deleteDto.getPassword());
     }

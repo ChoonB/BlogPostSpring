@@ -81,8 +81,13 @@ public class PostService {
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
         postRepository.deleteById(id);
-
         return true;
-
     }
+
+    private Post findPostById(Long id){
+        return postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+        );
+    }
+
 }
