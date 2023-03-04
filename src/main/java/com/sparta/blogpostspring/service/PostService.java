@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +80,6 @@ public class PostService {
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
     }
+
 
 }
