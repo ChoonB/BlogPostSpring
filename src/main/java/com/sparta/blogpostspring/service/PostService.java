@@ -1,5 +1,6 @@
 package com.sparta.blogpostspring.service;
 
+import com.sparta.blogpostspring.dto.MsgResponseDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.Post;
@@ -46,7 +47,7 @@ public class PostService {
         return user;
     }
 
-//  전체게시글 조회 메서드
+//  1. 전체게시글 조회 메서드
     @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
         List<PostResponseDto> prList = new ArrayList<>();
@@ -58,7 +59,7 @@ public class PostService {
     }
 
 
-//    게시글 작성 메서드
+//    2. 게시글 작성 메서드
     @Transactional
     public PostResponseDto createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
         // 토큰 검증 메서드
@@ -68,51 +69,43 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
-//    선택 게시글 조회 메서드
+//    3. 선택 게시글 조회 메서드
     @Transactional(readOnly = true)
     public PostResponseDto getSelectedPost(Long id) {
         Post post = findPostById(id);
         return new PostResponseDto(post);
     }
 
-//    선택 게시글 수정
+//    4. 선택 게시글 수정 메서드
     @Transactional
-    public PostResponseDto update(Long id, PostRequestDto postRequestDto) throws Exception {
+    public PostResponseDto update(Long id, PostRequestDto postRequestDto, HttpServletRequest request) {
+        User user = findUserByToken(request);
         Post post = findPostById(id);
-        if(!postRequestDto.getPassword().equals(post.getPassword())){
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+        if (!post.getUser().equals(user)) {
+            throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
         }
         post.update(postRequestDto);
         return new PostResponseDto(post);
     }
 
-//    @Transactional
-//    public boolean deletePost(Long id, String password) throws Exception {
-//        Post post = findPostById(id);
-//        if(!password.equals(post.getPassword())){
-//            throw new Exception("비밀번호가 일치하지 않습니다.");
-//        }
-//        postRepository.deleteById(id);
-//
-//        return true;
-//
-//    }
-
+    // 5. 선택 게시글 삭제 메서드
     @Transactional
-    public boolean deletePost2(Long id, String password) throws Exception {
+    public MsgResponseDto deletePost(Long id, HttpServletRequest request) {
+        User user = findUserByToken(request);
         Post post = findPostById(id);
-        if(!password.equals(post.getPassword())){
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+        if (!post.getUser().equals(user)) {
+            throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
         }
         postRepository.deleteById(id);
-        return true;
+        return new MsgResponseDto("게시글을 삭제했습니다.", 200);
     }
 
+    // 게시글 id로 DB에서 게시글 찾기
     private Post findPostById(Long id){
         return postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
-    }
 
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.sparta.blogpostspring.cotroller;
 
+import com.sparta.blogpostspring.dto.MsgResponseDto;
 import com.sparta.blogpostspring.dto.PostDeleteDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
@@ -19,39 +20,34 @@ public class PostController {
 
     private final PostService postService;
 
-//    전체게시글 조회 API
+//    1. 전체게시글 조회 API
     @GetMapping("/posts")
     public List<PostResponseDto> getPosts() {
         return postService.getPosts();
     }
 
-//    게시글 작성 API
+//    2. 게시글 작성 API
     @PostMapping("/post")
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
         return postService.createPost(postRequestDto, request);
     }
 
-//    선택 게시글 조회 API
+//    3. 선택 게시글 조회 API
     @GetMapping("/post/{id}")
     public PostResponseDto getSelectedPost(@PathVariable Long id){
         return postService.getSelectedPost(id);
     }
 
-//    선택 게시글 수정 API
+//    4. 선택 게시글 수정 API
     @PutMapping("/post/{id}")
-    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) throws Exception {
-        return postService.update(id, postRequestDto);
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
+        return postService.update(id, postRequestDto, request);
     }
 
-//    선택 게시글 삭제 API
-//    @DeleteMapping("/api/post/{id}/{password}")
-//    public boolean deletePost(@PathVariable Long id, @PathVariable String password) throws Exception {
-//        return postService.deletePost(id, password);
-//    }
-
+//  5. 선택 게시글 삭제 API
     @DeleteMapping("/post/{id}")
-    public boolean deletePost2(@PathVariable Long id, @RequestBody PostDeleteDto deleteDto) throws Exception {
-        return postService.deletePost2(id, deleteDto.getPassword());
+    public MsgResponseDto deletePost(@PathVariable Long id, HttpServletRequest request) {
+        return postService.deletePost(id, request);
     }
 
 }
