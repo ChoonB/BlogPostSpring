@@ -1,14 +1,11 @@
 package com.sparta.blogpostspring.cotroller;
 
 import com.sparta.blogpostspring.dto.MsgResponseDto;
-import com.sparta.blogpostspring.dto.PostDeleteDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
-import com.sparta.blogpostspring.entity.Post;
 import com.sparta.blogpostspring.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
