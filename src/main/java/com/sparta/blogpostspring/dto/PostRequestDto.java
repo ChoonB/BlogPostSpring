@@ -6,10 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PostRequestDto {
-    private String author;
     private String title;
     private String content;
-    private String password;
-
 
 }

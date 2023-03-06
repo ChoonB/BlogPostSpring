@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class PostResponseDto {
-    private String author;
+    private String username;
     private String title;
     private String content;
     private Long id;
@@ -19,7 +19,7 @@ public class PostResponseDto {
 //    생성자
     public PostResponseDto(Post post) {
 
-        this.author = post.getAuthor();
+        this.username = ;
         this.title = post.getTitle();
         this.content = post.getContent();
         this.id = post.getId();

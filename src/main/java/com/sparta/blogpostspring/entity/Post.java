@@ -15,8 +15,9 @@ public class Post extends Timestamped{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private String title;
@@ -24,15 +25,13 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String password;
 
 //    전체게시글조회 DTO로 받아서 생성자 주입
     public Post(PostRequestDto postRequestDto) {
-        this.author = postRequestDto.getAuthor();
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
-        this.password = postRequestDto.getPassword();
+        a
+
     }
 
 //    타임스탬프 2요소 게터 생성
@@ -46,8 +45,8 @@ public class Post extends Timestamped{
 
 //    update 메서드 생성
     public void update(PostRequestDto postRequestDto) {
-        this.author = postRequestDto.getAuthor();
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
+        a
     }
 }
