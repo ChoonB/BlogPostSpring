@@ -45,6 +45,7 @@ public class PostService {
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
         );
         return user;
+
     }
 
 //  1. 전체게시글 조회 메서드
