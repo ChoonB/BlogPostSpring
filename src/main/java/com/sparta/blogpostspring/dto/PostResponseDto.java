@@ -19,7 +19,7 @@ public class PostResponseDto {
 //    생성자
     public PostResponseDto(Post post) {
 
-        this.username = ;
+        this.username = post.getUser().getUsername();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.id = post.getId();

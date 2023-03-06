@@ -27,10 +27,10 @@ public class Post extends Timestamped{
 
 
 //    전체게시글조회 DTO로 받아서 생성자 주입
-    public Post(PostRequestDto postRequestDto) {
+    public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
-        a
+        this.user = user;
 
     }
 
