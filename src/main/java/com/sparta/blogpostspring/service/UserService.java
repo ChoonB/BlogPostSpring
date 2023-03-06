@@ -60,7 +60,7 @@ public class UserService {
         if (user.isEmpty()) return new MsgResponseDto("등록된 사용자가 없습니다.", 400);
 
         //비밀번호 확인
-        if(user.get().getPassword().equals(password)){
+        if(!user.get().getPassword().equals(password)){
             return new MsgResponseDto("비밀번호가 일치하지 않습니다.", 400);
         }
 
