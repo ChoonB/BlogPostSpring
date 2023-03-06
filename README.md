@@ -6,7 +6,7 @@ BlogPostSpring은 회원가입, 로그인 기능이 추가된 나만의 항해 �
 
 ## ERD
 
-![ERD](https://user-images.githubusercontent.com/97417978/223054809-db2acede-54e6-494c-af97-63272997769a.JPG)
+![image](https://user-images.githubusercontent.com/97417978/223117738-884ce2a9-1ec9-4763-8fb6-bb3d39b2108c.png)
 
 API 명세서 주소 : <https://documenter.getpostman.com/view/26067913/2s93JnW7br>
 
