@@ -13,7 +13,7 @@ public class SignupRequestDto {
             message = "유저 이름은 최소 4자 이상, 10자 이하이며 알파벳 소문자와 숫자만 사용해야 합니다.")
     private String username;
 
-    @Pattern(regexp = "^[a-zA-Z0-9.*~`!@#$%^&()+_;:,/?|=]{8,15}",
+    @Pattern(regexp = "^[\\w.*~`!@#$%^&()+;:,/?|=]{8,15}",
             message = "비밀번호는 최소 8자 이상, 15자 이하이며 알파벳 대소문자와 숫자, 특수문자만 사용해야 합니다.")
     private String password;
 
