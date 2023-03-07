@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -24,6 +25,9 @@ public class Post extends Timestamped{
 
     @Column(nullable = false)
     private String content;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<Comment> commentList;
 
 
 //    전체게시글조회 DTO로 받아서 생성자 주입
