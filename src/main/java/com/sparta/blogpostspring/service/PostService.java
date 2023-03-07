@@ -59,12 +59,7 @@ public class PostService {
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         List<Post> allByOrderByCreatedAtDesc = postRepository.findAllByOrderByCreatedAtDesc();
         for (Post post : allByOrderByCreatedAtDesc) {
-            List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
-            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-            for (Comment comment : comments) {
-                commentResponseDtoList.add(new CommentResponseDto(comment));
-            }
-            postResponseDtoList.add(new PostResponseDto(post, commentResponseDtoList));
+            postResponseDtoList.add(new PostResponseDto(post, getCommentsInPost(post)));
         }
         return postResponseDtoList;
     }
@@ -77,24 +72,14 @@ public class PostService {
         User user = findUserByToken(request);
         Post post = new Post(postRequestDto, user);
         postRepository.save(post);
-        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
-        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-        for (Comment comment : comments) {
-            commentResponseDtoList.add(new CommentResponseDto(comment));
-        }
-        return new PostResponseDto(post,commentResponseDtoList);
+        return new PostResponseDto(post,getCommentsInPost(post));
     }
 
 //    3. 선택 게시글 조회 메서드
     @Transactional(readOnly = true)
     public PostResponseDto getSelectedPost(Long id) {
         Post post = findPostById(id);
-        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
-        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-        for (Comment comment : comments) {
-            commentResponseDtoList.add(new CommentResponseDto(comment));
-        }
-        return new PostResponseDto(post, commentResponseDtoList);
+        return new PostResponseDto(post, getCommentsInPost(post));
     }
 
 //    4. 선택 게시글 수정 메서드
@@ -105,24 +90,14 @@ public class PostService {
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
         if(user.getRole().equals(UserRoleEnum.ADMIN)) {
             post.update(postRequestDto);
-            List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
-            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-            for (Comment comment : comments) {
-                commentResponseDtoList.add(new CommentResponseDto(comment));
-            }
-            return new PostResponseDto(post,commentResponseDtoList);
+            return new PostResponseDto(post,getCommentsInPost(post));
         }
 
         if (!post.getUser().equals(user)) {
             throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
         }
         post.update(postRequestDto);
-        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
-        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-        for (Comment comment : comments) {
-            commentResponseDtoList.add(new CommentResponseDto(comment));
-        }
-        return new PostResponseDto(post,commentResponseDtoList);
+        return new PostResponseDto(post,getCommentsInPost(post));
     }
 
     // 5. 선택 게시글 삭제 메서드
@@ -132,6 +107,8 @@ public class PostService {
         Post post = findPostById(id);
 //        user가 ADMIN이면 모든 게시글 삭제 가능. 아니면 작성자 검증.
         if(user.getRole().equals(UserRoleEnum.ADMIN)){
+//        게시글에 달린 댓글도 다 삭제?
+            commentRepository.deleteAllByPost(post);
             postRepository.deleteById(id);
             return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
         }
@@ -139,6 +116,9 @@ public class PostService {
         if (!post.getUser().equals(user)) {
             return new MessageResponseDto("해당 게시글의 작성자가 아닙니다.", HttpStatus.BAD_REQUEST);
         }
+//        게시글에 달린 댓글도 다 삭제?
+        commentRepository.deleteAllByPost(post);
+
         postRepository.deleteById(id);
         return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
     }
@@ -148,6 +128,16 @@ public class PostService {
         return postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
+    }
+
+//   해당 게시글에 달린 모든 댓글을 찾아서 CommentResponseDto 리스트로 반환
+    private List<CommentResponseDto> getCommentsInPost(Post post) {
+        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : comments) {
+            commentResponseDtoList.add(new CommentResponseDto(comment));
+        }
+        return commentResponseDtoList;
     }
 
 }
