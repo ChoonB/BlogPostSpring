@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -20,7 +22,7 @@ public class PostResponseDto {
     private List<CommentResponseDto> commentList;
 
     //    생성자
-    public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {
+    public PostResponseDto(Post post) {
 
         this.username = post.getUser().getUsername();
         this.title = post.getTitle();
@@ -28,7 +30,18 @@ public class PostResponseDto {
         this.id = post.getId();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
-        this.commentList = commentResponseDtoList;
+
+        List<Comment> comments = post.getCommentList();
+        if(comments != null){
+            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+            for (Comment comment : comments) {
+                commentResponseDtoList.add(new CommentResponseDto(comment));
+            }
+            commentResponseDtoList.sort(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed());
+            this.commentList = commentResponseDtoList;
+        }
+
+
 
     }
 }
