@@ -1,10 +1,11 @@
 package com.sparta.blogpostspring.cotroller;
 
-import com.sparta.blogpostspring.dto.MsgResponseDto;
+import com.sparta.blogpostspring.dto.MessageResponseDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,8 +44,9 @@ public class PostController {
 
 //  5. 선택 게시글 삭제 API
     @DeleteMapping("/post/{id}")
-    public MsgResponseDto deletePost(@PathVariable Long id, HttpServletRequest request) {
-        return postService.deletePost(id, request);
+    public ResponseEntity<MessageResponseDto> deletePost(@PathVariable Long id, HttpServletRequest request) {
+        MessageResponseDto msg = postService.deletePost(id, request);
+        return new ResponseEntity<>(msg, msg.getStatus());
     }
 
 }
