@@ -4,6 +4,7 @@ import com.sparta.blogpostspring.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class Comment extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "comment_id")
     private long id;
 
     @ManyToOne
@@ -31,9 +33,9 @@ public class Comment extends Timestamped{
 
     public Comment(Post post, User user, CommentRequestDto commentRequestDto) {
         this.post = post;
-        post.getCommentList().add(this);
+        post.addCommentList(this);
         this.user = user;
-        user.getCommentList().add(this);
+        user.addCommentList(this);
         this.content = commentRequestDto.getContent();
     }
 

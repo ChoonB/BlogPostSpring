@@ -27,7 +27,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
 //    토큰 검증 메서드
     private User findUserByToken(HttpServletRequest request) {
@@ -68,6 +68,7 @@ public class CommentService {
     }
 
     //    2. 댓글 수정 메서드
+    @Transactional
     public CommentResponseDto updateComment(Long id, CommentRequestDto commentRequestDto, HttpServletRequest request) {
         User user = findUserByToken(request);
 //        댓글 id로 댓글찾기
@@ -90,6 +91,7 @@ public class CommentService {
     }
 
 //  3. 댓글 삭제 메서드
+    @Transactional
     public MessageResponseDto deleteComment(Long id, HttpServletRequest request) {
         User user = findUserByToken(request);
         Comment comment = commentRepository.findById(id).orElseThrow(

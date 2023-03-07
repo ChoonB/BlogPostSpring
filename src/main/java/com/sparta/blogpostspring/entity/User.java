@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "users")
@@ -13,6 +14,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -26,15 +28,23 @@ public class User {
     private UserRoleEnum role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Post> postList;
+    private List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();
 
 
     public User(String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public void addPostList(Post post) {
+        this.postList.add(post);
+    }
+
+    public void addCommentList(Comment comment) {
+        this.commentList.add(comment);
     }
 }

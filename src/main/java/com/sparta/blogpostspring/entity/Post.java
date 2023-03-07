@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,6 +15,7 @@ import java.util.List;
 public class Post extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "post_id")
     private Long id;
 
     @ManyToOne
@@ -27,7 +29,7 @@ public class Post extends Timestamped{
     private String content;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();
 
 
 //    전체게시글조회 DTO로 받아서 생성자 주입
@@ -35,7 +37,7 @@ public class Post extends Timestamped{
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.user = user;
-        user.getPostList().add(this);
+        user.addPostList(this);
     }
 
 //    타임스탬프 2요소 게터 생성
@@ -51,5 +53,9 @@ public class Post extends Timestamped{
     public void update(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
+    }
+
+    public void addCommentList(Comment comment) {
+        this.commentList.add(comment);
     }
 }
