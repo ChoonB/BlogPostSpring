@@ -5,6 +5,7 @@ import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.Post;
 import com.sparta.blogpostspring.entity.User;
+import com.sparta.blogpostspring.entity.UserRoleEnum;
 import com.sparta.blogpostspring.jwt.JwtUtil;
 import com.sparta.blogpostspring.repository.PostRepository;
 import com.sparta.blogpostspring.repository.UserRepository;
@@ -26,7 +27,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    //    토큰 검증 그냥 메서드로 만듬. 여기에도 @Transactional 해야하나?
+    //    토큰 검증 private 메서드
     private User findUserByToken(HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -82,6 +83,12 @@ public class PostService {
     public PostResponseDto update(Long id, PostRequestDto postRequestDto, HttpServletRequest request) {
         User user = findUserByToken(request);
         Post post = findPostById(id);
+//        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
+        if(user.getRole().equals(UserRoleEnum.ADMIN)) {
+            post.update(postRequestDto);
+            return new PostResponseDto(post);
+        }
+
         if (!post.getUser().equals(user)) {
             throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
         }
@@ -94,6 +101,12 @@ public class PostService {
     public MessageResponseDto deletePost(Long id, HttpServletRequest request) {
         User user = findUserByToken(request);
         Post post = findPostById(id);
+//        user가 ADMIN이면 모든 게시글 삭제 가능. 아니면 작성자 검증.
+        if(user.getRole().equals(UserRoleEnum.ADMIN)){
+            postRepository.deleteById(id);
+            return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
+        }
+
         if (!post.getUser().equals(user)) {
             throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
         }
@@ -106,7 +119,6 @@ public class PostService {
         return postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
-
     }
 
 }
