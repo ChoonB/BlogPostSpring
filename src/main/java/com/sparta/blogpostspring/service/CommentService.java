@@ -102,7 +102,7 @@ public class CommentService {
             return new MessageResponseDto("댓글을 삭제했습니다.", HttpStatus.OK);
         }
         if (!comment.getUser().equals(user)){
-            throw new IllegalArgumentException("해당 댓글의 작성자가 아닙니다.");
+            return new MessageResponseDto("해당 댓글의 작성자가 아닙니다.", HttpStatus.BAD_REQUEST);
         }
         commentRepository.deleteById(id);
         return new MessageResponseDto("댓글을 삭제했습니다.", HttpStatus.OK);

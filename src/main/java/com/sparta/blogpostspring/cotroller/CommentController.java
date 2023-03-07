@@ -18,7 +18,7 @@ public class CommentController {
     private final CommentService commentService;
 
 //    1. 댓글 작성 API 여기서 id는 Post의 id / 위아래 id가 뜻하는게 다른데 이렇게 짜는게 맞나?
-    @PostMapping("/{id}")
+    @PostMapping("/post/{id}")
     public CommentResponseDto createComment(
             @PathVariable Long id, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
         return commentService.createComment(id, commentRequestDto, request);
@@ -35,8 +35,8 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponseDto> deleteComment(
             @PathVariable Long id, HttpServletRequest request) {
-        MessageResponseDto msg = commentService.deleteComment(id, request)
+        MessageResponseDto msg = commentService.deleteComment(id, request);
         return new ResponseEntity<>(msg, msg.getStatus());
-
+    }
 
 }

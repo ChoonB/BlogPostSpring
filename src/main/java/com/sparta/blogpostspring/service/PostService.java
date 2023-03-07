@@ -52,12 +52,12 @@ public class PostService {
 //  1. 전체게시글 조회 메서드
     @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
-        List<PostResponseDto> prList = new ArrayList<>();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         List<Post> allByOrderByCreatedAtDesc = postRepository.findAllByOrderByCreatedAtDesc();
         for (Post post : allByOrderByCreatedAtDesc) {
-            prList.add(new PostResponseDto(post));
+            postResponseDtoList.add(new PostResponseDto(post));
         }
-        return prList;
+        return postResponseDtoList;
     }
 
 
@@ -108,7 +108,7 @@ public class PostService {
         }
 
         if (!post.getUser().equals(user)) {
-            throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
+            return new MessageResponseDto("해당 게시글의 작성자가 아닙니다.", HttpStatus.BAD_REQUEST);
         }
         postRepository.deleteById(id);
         return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);

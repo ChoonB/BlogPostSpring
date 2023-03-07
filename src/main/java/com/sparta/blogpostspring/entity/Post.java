@@ -35,6 +35,7 @@ public class Post extends Timestamped{
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.user = user;
+        user.getPostList().add(this);
     }
 
 //    타임스탬프 2요소 게터 생성

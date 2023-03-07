@@ -31,7 +31,9 @@ public class Comment extends Timestamped{
 
     public Comment(Post post, User user, CommentRequestDto commentRequestDto) {
         this.post = post;
+        post.getCommentList().add(this);
         this.user = user;
+        user.getCommentList().add(this);
         this.content = commentRequestDto.getContent();
     }
 
