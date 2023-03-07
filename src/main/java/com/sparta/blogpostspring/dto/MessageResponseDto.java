@@ -6,12 +6,14 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
-public class MsgResponseDto {
+public class MessageResponseDto {
     private String msg;
+    private HttpStatus status;
     private int statusCode;
 
-    public MsgResponseDto(String msg, int statusCode) {
+    public MessageResponseDto(String msg,HttpStatus httpStatus) {
         this.msg = msg;
-        this.statusCode = statusCode;
+        this.status = httpStatus;
+        this.statusCode = httpStatus.value();
     }
 }
