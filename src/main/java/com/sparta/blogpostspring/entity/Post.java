@@ -28,7 +28,7 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
 
 
@@ -58,4 +58,5 @@ public class Post extends Timestamped{
     public void addCommentList(Comment comment) {
         this.commentList.add(comment);
     }
+
 }

@@ -1,12 +1,15 @@
 package com.sparta.blogpostspring.service;
 
+import com.sparta.blogpostspring.dto.CommentResponseDto;
 import com.sparta.blogpostspring.dto.MessageResponseDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
+import com.sparta.blogpostspring.entity.Comment;
 import com.sparta.blogpostspring.entity.Post;
 import com.sparta.blogpostspring.entity.User;
 import com.sparta.blogpostspring.entity.UserRoleEnum;
 import com.sparta.blogpostspring.jwt.JwtUtil;
+import com.sparta.blogpostspring.repository.CommentRepository;
 import com.sparta.blogpostspring.repository.PostRepository;
 import com.sparta.blogpostspring.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -25,6 +28,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final JwtUtil jwtUtil;
 
     //    토큰 검증 private 메서드
@@ -55,7 +59,12 @@ public class PostService {
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         List<Post> allByOrderByCreatedAtDesc = postRepository.findAllByOrderByCreatedAtDesc();
         for (Post post : allByOrderByCreatedAtDesc) {
-            postResponseDtoList.add(new PostResponseDto(post));
+            List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
+            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+            for (Comment comment : comments) {
+                commentResponseDtoList.add(new CommentResponseDto(comment));
+            }
+            postResponseDtoList.add(new PostResponseDto(post, commentResponseDtoList));
         }
         return postResponseDtoList;
     }
@@ -68,14 +77,24 @@ public class PostService {
         User user = findUserByToken(request);
         Post post = new Post(postRequestDto, user);
         postRepository.save(post);
-        return new PostResponseDto(post);
+        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : comments) {
+            commentResponseDtoList.add(new CommentResponseDto(comment));
+        }
+        return new PostResponseDto(post,commentResponseDtoList);
     }
 
 //    3. 선택 게시글 조회 메서드
     @Transactional(readOnly = true)
     public PostResponseDto getSelectedPost(Long id) {
         Post post = findPostById(id);
-        return new PostResponseDto(post);
+        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : comments) {
+            commentResponseDtoList.add(new CommentResponseDto(comment));
+        }
+        return new PostResponseDto(post, commentResponseDtoList);
     }
 
 //    4. 선택 게시글 수정 메서드
@@ -86,14 +105,24 @@ public class PostService {
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
         if(user.getRole().equals(UserRoleEnum.ADMIN)) {
             post.update(postRequestDto);
-            return new PostResponseDto(post);
+            List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
+            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+            for (Comment comment : comments) {
+                commentResponseDtoList.add(new CommentResponseDto(comment));
+            }
+            return new PostResponseDto(post,commentResponseDtoList);
         }
 
         if (!post.getUser().equals(user)) {
             throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
         }
         post.update(postRequestDto);
-        return new PostResponseDto(post);
+        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : comments) {
+            commentResponseDtoList.add(new CommentResponseDto(comment));
+        }
+        return new PostResponseDto(post,commentResponseDtoList);
     }
 
     // 5. 선택 게시글 삭제 메서드
