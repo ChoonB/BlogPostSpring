@@ -25,7 +25,7 @@ public class Comment extends Timestamped{
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
-    private User    user;
+    private User user;
 
     @NotBlank
     private String content;

@@ -40,8 +40,5 @@ public class PostResponseDto {
             commentResponseDtoList.sort(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed());
             this.commentList = commentResponseDtoList;
         }
-
-
-
     }
 }

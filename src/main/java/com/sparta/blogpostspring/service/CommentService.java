@@ -62,6 +62,7 @@ public class CommentService {
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
         User user = findUserByToken(request);
         Post post = findPostById(postId);
+//        이밑에 작성 순서 테스트해보기
         Comment comment = new Comment(post, user, commentRequestDto);
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
