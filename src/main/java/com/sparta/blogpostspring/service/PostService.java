@@ -1,6 +1,6 @@
 package com.sparta.blogpostspring.service;
 
-import com.sparta.blogpostspring.dto.MsgResponseDto;
+import com.sparta.blogpostspring.dto.MessageResponseDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.Post;
@@ -10,13 +10,13 @@ import com.sparta.blogpostspring.repository.PostRepository;
 import com.sparta.blogpostspring.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -91,14 +91,14 @@ public class PostService {
 
     // 5. 선택 게시글 삭제 메서드
     @Transactional
-    public MsgResponseDto deletePost(Long id, HttpServletRequest request) {
+    public MessageResponseDto deletePost(Long id, HttpServletRequest request) {
         User user = findUserByToken(request);
         Post post = findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
         }
         postRepository.deleteById(id);
-        return new MsgResponseDto("게시글을 삭제했습니다.", 200);
+        return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
     }
 
     // 게시글 id로 DB에서 게시글 찾기
