@@ -1,10 +1,21 @@
 # BlogPostSpring
 
+## Lv.3 (230308)
+BlogPostSpring은 회원가입, 로그인, 댓글 작성/조회/수정/삭제 기능이 추가된 나만의 항해 블로그 백엔드 서버 실습과제 입니다.
+
+### ERD
+
+![ERD Lv 3](https://user-images.githubusercontent.com/97417978/223611253-ce160c86-976c-40a4-a205-2d644fc9a02f.JPG)
+
+API 명세서 주소 : <https://documenter.getpostman.com/view/26067913/2s93JqRjR1>
+
+230308 현재 LV.2의 모든 기능 구현 완료 상태에서 추가적으로 수정진행하였으며, 댓글 CRUD를 구현하고 예외처리도 새롭게 했습니다.
+
 ## Lv.2 (230306)
 
 BlogPostSpring은 회원가입, 로그인 기능이 추가된 나만의 항해 블로그 백엔드 서버 실습과제 입니다.
 
-## ERD
+### ERD
 
 ![image](https://user-images.githubusercontent.com/97417978/223117738-884ce2a9-1ec9-4763-8fb6-bb3d39b2108c.png)
 
@@ -18,7 +29,7 @@ API 명세서 주소 : <https://documenter.getpostman.com/view/26067913/2s93JnW7
 
 BlogPostSpring은 로그인 기능이 없는 블로그 백엔드 실습 과제입니다.
 
-Use Case
+### Use Case
 
 ![SpringPostUseCase](https://user-images.githubusercontent.com/97417978/221760664-f5ed5ee9-1192-425c-aac7-4309d9f838b9.png)
 
