@@ -33,16 +33,14 @@ public class UserService {
         //회원중복 확인
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
-//            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
-            return new MessageResponseDto("중복된 사용자가 존재합니다.",HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException("중복된 username 입니다.");
         }
 
         // 사용자 Role 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-//                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
-                return new MessageResponseDto("관리자 암호가 틀려 등록이 불가능합니다.",HttpStatus.BAD_REQUEST);
+                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
             }
             role = UserRoleEnum.ADMIN;
         }
@@ -58,16 +56,16 @@ public class UserService {
         String password = loginRequestDto.getPassword();
 
         //사용자 확인
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) return new MessageResponseDto("등록된 사용자가 없습니다.", HttpStatus.BAD_REQUEST);
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("회원을 찾을 수 없습니다.")
+        );
 
         //비밀번호 확인
-        if(!user.get().getPassword().equals(password)){
-    //            return new MessageResponseDto("비밀번호가 일치하지 않습니다.", 400);
-                return new MessageResponseDto("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+        if(!user.getPassword().equals(password)){
+            throw new IllegalArgumentException("회원을 찾을 수 없습니다.");
         }
 
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.get().getUsername(), user.get().getRole()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
 
         return new MessageResponseDto("로그인에 성공하였습니다.", HttpStatus.OK);
     }
