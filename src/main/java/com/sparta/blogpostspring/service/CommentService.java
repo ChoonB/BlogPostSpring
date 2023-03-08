@@ -14,11 +14,13 @@ import com.sparta.blogpostspring.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,26 +70,26 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
-    //    2. 댓글 수정 메서드
+    //    2. 댓글 수정 메서드 ResponseEntity<?> 사용했는데 Optional 때문에 코드가 지저분해진다. 계속 .get 써야됨..
     @Transactional
-    public CommentResponseDto updateComment(Long postId, Long commentId ,CommentRequestDto commentRequestDto, HttpServletRequest request) {
+    public ResponseEntity<?> updateComment(Long postId, Long commentId , CommentRequestDto commentRequestDto, HttpServletRequest request) {
         User user = findUserByToken(request);
 //        댓글 id로 댓글찾기
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
-        );
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        if (comment.isEmpty()) return new ResponseEntity<>(new MessageResponseDto("해당 댓글을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
 //        Post가 있는지 확인
         Post post = findPostById(postId);
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
         if (user.getRole().equals(UserRoleEnum.ADMIN)){
-            comment.update(commentRequestDto);
-            return new CommentResponseDto(comment);
+            comment.get().update(commentRequestDto);
+            return new ResponseEntity<>(new CommentResponseDto(comment.get()), HttpStatus.OK);
         }
-        if (!comment.getUser().equals(user)){
-            throw new IllegalArgumentException("해당 댓글의 작성자가 아닙니다.");
+        if (!comment.get().getUser().equals(user)){
+            return new ResponseEntity<>(new MessageResponseDto("작성자만 수정할 수 있습니다.", HttpStatus.BAD_REQUEST),HttpStatus.BAD_REQUEST);
         }
-        comment.update(commentRequestDto);
-        return new CommentResponseDto(comment);
+        comment.get().update(commentRequestDto);
+
+        return new ResponseEntity<>(new CommentResponseDto(comment.get()), HttpStatus.OK);
 
     }
 
@@ -110,4 +112,5 @@ public class CommentService {
         commentRepository.deleteById(commentId);
         return new MessageResponseDto("댓글을 삭제했습니다.", HttpStatus.OK);
     }
+
 }
