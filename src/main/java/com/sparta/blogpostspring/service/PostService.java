@@ -37,28 +37,35 @@ public class PostService {
         Claims claims;
 
         if(token == null) {
-            throw new IllegalArgumentException("JWT Token이 없습니다.");
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
 
         if (jwtUtil.validateToken(token)) {
             claims = jwtUtil.getUserInfoFromToken(token);
         } else {
-            throw new IllegalArgumentException("Token Error");
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
 
         User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
         return user;
-
     }
 
-//  1. 전체게시글 조회 메서드
+    // 게시글 id로 DB에서 게시글 찾기
+    private Post findPostById(Long PostId){
+        return postRepository.findById(PostId).orElseThrow(
+                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
+        );
+    }
+
+
+    //  1. 전체게시글 조회 메서드
     @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-        List<Post> allByOrderByCreatedAtDesc = postRepository.findAllByOrderByCreatedAtDesc();
-        for (Post post : allByOrderByCreatedAtDesc) {
+        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
+        for (Post post : postList) {
             postResponseDtoList.add(new PostResponseDto(post));
         }
         return postResponseDtoList;
@@ -77,16 +84,16 @@ public class PostService {
 
 //    3. 선택 게시글 조회 메서드
     @Transactional(readOnly = true)
-    public PostResponseDto getSelectedPost(Long id) {
-        Post post = findPostById(id);
+    public PostResponseDto getSelectedPost(Long PostId) {
+        Post post = findPostById(PostId);
         return new PostResponseDto(post);
     }
 
 //    4. 선택 게시글 수정 메서드
     @Transactional
-    public PostResponseDto update(Long id, PostRequestDto postRequestDto, HttpServletRequest request) {
+    public PostResponseDto update(Long PostId, PostRequestDto postRequestDto, HttpServletRequest request) {
         User user = findUserByToken(request);
-        Post post = findPostById(id);
+        Post post = findPostById(PostId);
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
         if(user.getRole().equals(UserRoleEnum.ADMIN)) {
             post.update(postRequestDto);
@@ -94,7 +101,7 @@ public class PostService {
         }
 
         if (!post.getUser().equals(user)) {
-            throw new IllegalArgumentException("해당 게시글의 작성자가 아닙니다.");
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         post.update(postRequestDto);
         return new PostResponseDto(post);
@@ -102,33 +109,27 @@ public class PostService {
 
     // 5. 선택 게시글 삭제 메서드
     @Transactional
-    public MessageResponseDto deletePost(Long id, HttpServletRequest request) {
+    public MessageResponseDto deletePost(Long PostId, HttpServletRequest request) {
         User user = findUserByToken(request);
-        Post post = findPostById(id);
+        Post post = findPostById(PostId);
 //        user가 ADMIN이면 모든 게시글 삭제 가능. 아니면 작성자 검증.
         if(user.getRole().equals(UserRoleEnum.ADMIN)){
 //        게시글에 달린 댓글도 다 삭제?
             commentRepository.deleteAllByPost(post);
-            postRepository.deleteById(id);
+            postRepository.deleteById(PostId);
             return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
         }
 
         if (!post.getUser().equals(user)) {
-            return new MessageResponseDto("해당 게시글의 작성자가 아닙니다.", HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
 //        게시글에 달린 댓글도 다 삭제?
         commentRepository.deleteAllByPost(post);
 
-        postRepository.deleteById(id);
+        postRepository.deleteById(PostId);
         return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
     }
 
-    // 게시글 id로 DB에서 게시글 찾기
-    private Post findPostById(Long id){
-        return postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
-        );
-    }
 
 //   해당 게시글에 달린 모든 댓글을 찾아서 CommentResponseDto 리스트로 반환
 //    private List<CommentResponseDto> getCommentsInPost(Post post) {
