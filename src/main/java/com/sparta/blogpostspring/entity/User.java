@@ -40,12 +40,4 @@ public class User {
         this.role = role;
     }
 
-    public void addPostList(Post post) {
-        this.postList.add(post);
-    }
-
-    public void addCommentList(Comment comment) {
-        this.commentList.add(comment);
-    }
-
 }
