@@ -19,7 +19,7 @@ public class PostResponseDto {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-    private List<CommentResponseDto> commentList;
+    private List<CommentResponseDto> commentList = new ArrayList<>();
 
     //    생성자
     public PostResponseDto(Post post) {
@@ -32,7 +32,7 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
 
         List<Comment> comments = post.getCommentList();
-        if(comments != null){
+        if(!comments.isEmpty()){
             List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
             for (Comment comment : comments) {
                 commentResponseDtoList.add(new CommentResponseDto(comment));
