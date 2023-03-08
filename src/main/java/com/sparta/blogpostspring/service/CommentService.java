@@ -14,13 +14,11 @@ import com.sparta.blogpostspring.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,17 +35,17 @@ public class CommentService {
         Claims claims;
 
         if(token == null) {
-            throw new IllegalArgumentException("JWT Token이 없습니다.");
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
 
         if (jwtUtil.validateToken(token)) {
             claims = jwtUtil.getUserInfoFromToken(token);
         } else {
-            throw new IllegalArgumentException("Token Error");
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
 
         User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
         return user;
     }
@@ -55,7 +53,7 @@ public class CommentService {
 //    게시글 id로 DB에서 게시글 찾기
         private Post findPostById(Long id) {
             return postRepository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                    () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
             );
         }
 
@@ -70,27 +68,26 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
-    //    2. 댓글 수정 메서드 ResponseEntity<?> 사용했는데 Optional 때문에 코드가 지저분해진다. 계속 .get 써야됨..
+    //    2. 댓글 수정 메서드
     @Transactional
-    public ResponseEntity<?> updateComment(Long postId, Long commentId , CommentRequestDto commentRequestDto, HttpServletRequest request) {
+    public CommentResponseDto updateComment(Long postId, Long commentId ,CommentRequestDto commentRequestDto, HttpServletRequest request) {
         User user = findUserByToken(request);
 //        댓글 id로 댓글찾기
-        Optional<Comment> comment = commentRepository.findById(commentId);
-        if (comment.isEmpty()) return new ResponseEntity<>(new MessageResponseDto("해당 댓글을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
+        );
 //        Post가 있는지 확인
         Post post = findPostById(postId);
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
-        if (user.getRole().equals(UserRoleEnum.ADMIN)){
-            comment.get().update(commentRequestDto);
-            return new ResponseEntity<>(new CommentResponseDto(comment.get()), HttpStatus.OK);
+        if (user.getRole().equals(UserRoleEnum.ADMIN)) {
+            comment.update(commentRequestDto);
+            return new CommentResponseDto(comment);
         }
-        if (!comment.get().getUser().equals(user)){
-            return new ResponseEntity<>(new MessageResponseDto("작성자만 수정할 수 있습니다.", HttpStatus.BAD_REQUEST),HttpStatus.BAD_REQUEST);
+        if (!comment.getUser().equals(user)) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
-        comment.get().update(commentRequestDto);
-
-        return new ResponseEntity<>(new CommentResponseDto(comment.get()), HttpStatus.OK);
-
+        comment.update(commentRequestDto);
+        return new CommentResponseDto(comment);
     }
 
 //  3. 댓글 삭제 메서드
@@ -98,19 +95,19 @@ public class CommentService {
     public MessageResponseDto deleteComment(Long postId, Long commentId ,HttpServletRequest request) {
         User user = findUserByToken(request);
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );
         Post post = findPostById(postId);
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
         if (user.getRole().equals(UserRoleEnum.ADMIN)){
             commentRepository.deleteById(commentId);
-            return new MessageResponseDto("댓글을 삭제했습니다.", HttpStatus.OK);
+            return new MessageResponseDto("댓글을 성공적으로 삭제했습니다.", HttpStatus.OK);
         }
         if (!comment.getUser().equals(user)){
-            return new MessageResponseDto("해당 댓글의 작성자가 아닙니다.", HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
         commentRepository.deleteById(commentId);
-        return new MessageResponseDto("댓글을 삭제했습니다.", HttpStatus.OK);
+        return new MessageResponseDto("댓글을 성공적으로 삭제했습니다.", HttpStatus.OK);
     }
 
 }
