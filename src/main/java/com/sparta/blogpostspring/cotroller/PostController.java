@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,27 +27,26 @@ public class PostController {
 
 //    2. 게시글 작성 API
     @PostMapping("/post")
-    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
+    public PostResponseDto createPost(@RequestBody @Valid PostRequestDto postRequestDto, HttpServletRequest request){
         return postService.createPost(postRequestDto, request);
     }
 
 //    3. 선택 게시글 조회 API
-    @GetMapping("/post/{id}")
-    public PostResponseDto getSelectedPost(@PathVariable Long id){
-        return postService.getSelectedPost(id);
+    @GetMapping("/post/{PostId}")
+    public PostResponseDto getSelectedPost(@PathVariable Long PostId){
+        return postService.getSelectedPost(PostId);
     }
 
 //    4. 선택 게시글 수정 API
-    @PutMapping("/post/{id}")
-    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
-        return postService.update(id, postRequestDto, request);
+    @PutMapping("/post/{PostId}")
+    public PostResponseDto updatePost(@PathVariable Long PostId, @RequestBody @Valid PostRequestDto postRequestDto, HttpServletRequest request){
+        return postService.update(PostId, postRequestDto, request);
     }
 
 //  5. 선택 게시글 삭제 API
-    @DeleteMapping("/post/{id}")
-    public ResponseEntity<MessageResponseDto> deletePost(@PathVariable Long id, HttpServletRequest request) {
-        MessageResponseDto msg = postService.deletePost(id, request);
-        return new ResponseEntity<>(msg, msg.getStatus());
+    @DeleteMapping("/post/{PostId}")
+    public MessageResponseDto deletePost(@PathVariable Long PostId, HttpServletRequest request) {
+        return postService.deletePost(PostId, request);
     }
 
 }
