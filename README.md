@@ -10,6 +10,7 @@ BlogPostSpring은 회원가입, 로그인, 댓글 작성/조회/수정/삭제 �
 API 명세서 주소 : <https://documenter.getpostman.com/view/26067913/2s93JqRjR1>
 
 230308 현재 LV.2의 모든 기능 구현 완료 상태에서 추가적으로 수정진행하였으며, 댓글 CRUD를 구현하고 예외처리도 새롭게 했습니다.
+현재 AWS RDS로 DB 연결하고 배포까지 완료했습니다.
 
 ## Lv.2 (230306)
 
