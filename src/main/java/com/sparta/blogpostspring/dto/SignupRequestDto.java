@@ -2,6 +2,7 @@ package com.sparta.blogpostspring.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.validation.constraints.Pattern;
 
@@ -19,4 +20,5 @@ public class SignupRequestDto {
 
     private boolean admin = false;
     private String adminToken = "";
+
 }
