@@ -18,6 +18,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+
 //    1. 댓글 작성 API
     @PostMapping("/{postId}/comment")
     public CommentResponseDto createComment(
