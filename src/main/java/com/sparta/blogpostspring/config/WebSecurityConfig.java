@@ -52,7 +52,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-        http.formLogin().loginPage("/api/auth/login-page").permitAll();
+//        http.formLogin().loginPage("/api/auth/login-page").permitAll();
 
         return http.build();
     }

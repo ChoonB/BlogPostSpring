@@ -68,12 +68,16 @@ public class PostService {
     @Transactional
     public PostResponseDto update(Long PostId, PostRequestDto postRequestDto, User user) {
         Post post = findPostById(PostId);
+        System.out.println("" + user.getId());
+        System.out.println(user.getUsername());
+        System.out.println("" + post.getUser().getId());
+        System.out.println(post.getUser().getId());
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
         if(user.getRole().equals(UserRoleEnum.ADMIN)) {
             post.update(postRequestDto);
             return new PostResponseDto(post);
         }
-        if (!post.getUser().equals(user)) {
+        if (!user.equals(post.getUser())) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         post.update(postRequestDto);

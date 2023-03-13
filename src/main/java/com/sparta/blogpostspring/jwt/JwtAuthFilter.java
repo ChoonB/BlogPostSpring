@@ -28,9 +28,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // request의 header에서 토큰을 가져옴
         String token = jwtUtil.resolveToken(request);
         // token 유효성 검사 token null 일때?
-        if (token == null) {
-            throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
-        } else {
+        if (token != null) {
             if (!jwtUtil.validateToken(token)){
                 throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
 //                jwtExceptionHandler(response, "토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
