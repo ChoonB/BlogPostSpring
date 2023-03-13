@@ -27,11 +27,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // request의 header에서 토큰을 가져옴
         String token = jwtUtil.resolveToken(request);
-        // token 유효성 검사
-        if (token != null) {
+        // token 유효성 검사 token null 일때?
+        if (token == null) {
+            throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
+        } else {
             if (!jwtUtil.validateToken(token)){
-                jwtExceptionHandler(response, "토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-                return;
+                throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
+//                jwtExceptionHandler(response, "토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+//                return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
             // 인증 객체 생성
@@ -49,17 +52,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(context);
     }
 
-//    토큰 오류 발생시 예외처리
-    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus httpStatus) {
-        response.setStatus(httpStatus.value());
-        response.setContentType("application/json");
-        try {
-            String json = new ObjectMapper().writeValueAsString(new MessageResponseDto(msg,httpStatus));
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
+////    토큰 오류 발생시 예외처리
+//    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus httpStatus) {
+//        response.setStatus(httpStatus.value());
+//        response.setContentType("application/json");
+//        try {
+//            String json = new ObjectMapper().writeValueAsString(new MessageResponseDto(msg,httpStatus));
+//            response.getWriter().write(json);
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//        }
+//    }
 
 
 
