@@ -6,10 +6,8 @@ import com.sparta.blogpostspring.dto.MessageResponseDto;
 import com.sparta.blogpostspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -20,6 +18,12 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+
+    // 로그인페이지 Spring Security써서 한번 구현 해봄
+    @GetMapping("/login-page")
+    public ModelAndView loginPage() {
+        return new ModelAndView("login");
+    }
 
     @PostMapping("/signup")
     public MessageResponseDto signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
