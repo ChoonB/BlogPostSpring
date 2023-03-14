@@ -3,6 +3,7 @@ package com.sparta.blogpostspring.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.blogpostspring.dto.MessageResponseDto;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,8 +35,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // token 유효성 검사 token null 일때?
         if (token != null) {
             if (!jwtUtil.validateToken(token)){
-                jwtExceptionHandler(response, "토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
-                return;
+                throw new JwtException("토큰이 유효하지 않습니다.");
+//                jwtExceptionHandler(response, "토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
+//                return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
             // 인증 객체 생성
@@ -54,17 +56,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
 //    토큰 오류 발생시 예외처리.
-    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus httpStatus) {
-        response.setStatus(httpStatus.value());
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=UTF-8");
-        try {
-            String json = new ObjectMapper().writeValueAsString(new MessageResponseDto(msg,httpStatus));
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
+//    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus httpStatus) {
+//        response.setStatus(httpStatus.value());
+//        response.setCharacterEncoding("UTF-8");
+//        response.setContentType("application/json; charset=UTF-8");
+//        try {
+//            String json = new ObjectMapper().writeValueAsString(new MessageResponseDto(msg,httpStatus));
+//            response.getWriter().write(json);
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//        }
+//    }
 
 
 

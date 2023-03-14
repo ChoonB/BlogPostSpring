@@ -2,6 +2,7 @@ package com.sparta.blogpostspring.config;
 
 import com.sparta.blogpostspring.entity.User;
 import com.sparta.blogpostspring.entity.UserRoleEnum;
+import com.sparta.blogpostspring.exeption.ExceptionHandlerFilter;
 import com.sparta.blogpostspring.jwt.JwtAuthFilter;
 import com.sparta.blogpostspring.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +52,11 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/posts").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/post/**").permitAll()
                 .anyRequest().authenticated()
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                        .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthFilter.class);
 
-        http.formLogin().loginPage("/api/auth/login-page").permitAll();
+
+//        http.formLogin().loginPage("/api/auth/login-page").permitAll();
 
         return http.build();
     }

@@ -15,7 +15,8 @@ public class GlobalExceptionHandler {
 //    throw로 발생시킨 오류 처리
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<MessageResponseDto> handleRuntimeException(RuntimeException e){
-        MessageResponseDto messageResponseDto = new MessageResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST);
+        String message = e.getMessage().split(":")[0];
+        MessageResponseDto messageResponseDto = new MessageResponseDto(message, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(messageResponseDto, messageResponseDto.getStatus());
     }
 
@@ -27,9 +28,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(messageResponseDto, messageResponseDto.getStatus());
     }
 
+//    나머지 예외 처리
     @ExceptionHandler
     public ResponseEntity<MessageResponseDto> handleException(Exception e){
-        MessageResponseDto messageResponseDto = new MessageResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST);
+        String message = e.getMessage().split(":")[0];
+        MessageResponseDto messageResponseDto = new MessageResponseDto(message, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(messageResponseDto, messageResponseDto.getStatus());
     }
 
