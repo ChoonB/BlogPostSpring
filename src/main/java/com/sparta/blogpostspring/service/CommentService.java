@@ -59,7 +59,7 @@ public class CommentService {
             comment.update(commentRequestDto);
             return new CommentResponseDto(comment);
         }
-        if (!comment.getUser().equals(user)) {
+        if (!comment.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         comment.update(commentRequestDto);
@@ -80,7 +80,7 @@ public class CommentService {
             commentRepository.deleteById(commentId);
             return new MessageResponseDto("댓글을 성공적으로 삭제했습니다.", HttpStatus.OK);
         }
-        if (!comment.getUser().equals(user)){
+        if (!comment.getUser().getId().equals(user.getId())){
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
         commentRepository.deleteById(commentId);
