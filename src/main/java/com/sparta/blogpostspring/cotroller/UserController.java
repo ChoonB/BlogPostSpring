@@ -20,10 +20,10 @@ public class UserController {
     private final UserService userService;
 
     // 로그인페이지 Spring Security써서 한번 구현 해봄
-//    @GetMapping("/login-page")
-//    public ModelAndView loginPage() {
-//        return new ModelAndView("login");
-//    }
+    @GetMapping("/login-page")
+    public ModelAndView loginPage() {
+        return new ModelAndView("login");
+    }
 
     @PostMapping("/signup")
     public MessageResponseDto signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
