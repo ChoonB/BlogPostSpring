@@ -3,6 +3,7 @@ package com.sparta.blogpostspring.entity;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private List<Comment> commentList = new ArrayList<>();
 
 
@@ -37,7 +38,6 @@ public class Post extends Timestamped{
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.user = user;
-        user.getPostList().add(this);
     }
 
 //    타임스탬프 2요소 게터 생성
@@ -54,10 +54,5 @@ public class Post extends Timestamped{
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
     }
-
-//    public void addCommentList(Comment comment){
-//        this.commentList.add(comment);
-//    }
-
 
 }
