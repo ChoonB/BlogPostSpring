@@ -1,4 +1,17 @@
 # BlogPostSpring
+## Lv.4+5 (230314)
+BlogPostSpring은 아래의 LV.3과제에 Spring Security를 적용하고 게시글과 댓글에 좋아요 기능을 추가한 항해 블로그 백엔드 서버 실습과제입니다.
+
+### ERD
+
+![ERD 2차](https://user-images.githubusercontent.com/97417978/224954992-56e45fa9-f84d-4f11-a979-b6de3d759d6e.JPG)
+
+API명세서 주소 : <https://documenter.getpostman.com/view/26067913/2s93Juu3ic>
+
+230314 현재 Lv.3의 모든 기능 구현 완료 상태에서 추가적으로 수정 진행하였으며, 게시글과 댓글에 좋아요 기능 구현하고,
+Spring Security 적용했습니다. 현재 H2 DB에 연결중입니다.
+
+-----------------------------------
 
 ## Lv.3 (230308)
 BlogPostSpring은 회원가입, 로그인, 댓글 작성/조회/수정/삭제 기능이 추가된 나만의 항해 블로그 백엔드 서버 실습과제 입니다.
@@ -11,6 +24,8 @@ API 명세서 주소 : <https://documenter.getpostman.com/view/26067913/2s93JqRj
 
 230308 현재 LV.2의 모든 기능 구현 완료 상태에서 추가적으로 수정진행하였으며, 댓글 CRUD를 구현하고 예외처리도 새롭게 했습니다.
 현재 AWS RDS로 DB 연결하고 배포까지 완료했습니다.
+
+--------------------------------
 
 ## Lv.2 (230306)
 
