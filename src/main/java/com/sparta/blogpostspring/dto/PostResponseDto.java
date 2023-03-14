@@ -17,6 +17,7 @@ public class PostResponseDto {
     private String username;
     private String title;
     private String content;
+    private int heartCount;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private List<CommentResponseDto> commentList = new ArrayList<>();
@@ -28,6 +29,7 @@ public class PostResponseDto {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.id = post.getId();
+        this.heartCount = post.getHeartCount();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
 

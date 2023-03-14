@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,7 +19,7 @@ public class Comment extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "POST_ID", nullable = false)
@@ -29,6 +31,8 @@ public class Comment extends Timestamped{
 
     @NotBlank
     private String content;
+
+    private int heartCount = 0;
 
 
     public Comment(Post post, User user, CommentRequestDto commentRequestDto) {
@@ -50,4 +54,7 @@ public class Comment extends Timestamped{
         this.content = commentRequestDto.getContent();
     }
 
+    public void setHeartCount(int heartCount) {
+        this.heartCount = heartCount;
+    }
 }

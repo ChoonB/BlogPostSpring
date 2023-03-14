@@ -1,6 +1,7 @@
 package com.sparta.blogpostspring.config;
 
 import com.sparta.blogpostspring.entity.User;
+import com.sparta.blogpostspring.entity.UserRoleEnum;
 import com.sparta.blogpostspring.jwt.JwtAuthFilter;
 import com.sparta.blogpostspring.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;

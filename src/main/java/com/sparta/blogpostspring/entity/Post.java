@@ -32,6 +32,8 @@ public class Post extends Timestamped{
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private List<Comment> commentList = new ArrayList<>();
 
+    private int heartCount = 0;
+
 
 //    전체게시글조회 DTO로 받아서 생성자 주입
     public Post(PostRequestDto postRequestDto, User user) {
@@ -55,4 +57,7 @@ public class Post extends Timestamped{
         this.content = postRequestDto.getContent();
     }
 
+    public void setHeartCount(int heartCount) {
+        this.heartCount = heartCount;
+    }
 }

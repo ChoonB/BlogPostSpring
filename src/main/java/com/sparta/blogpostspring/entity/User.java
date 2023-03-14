@@ -27,11 +27,11 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Post> postList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<Comment> commentList = new ArrayList<>();
+//    @OneToMany(mappedBy = "user")
+//    private List<Post> postList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Comment> commentList = new ArrayList<>();
 
 
     public User(String username, String password, UserRoleEnum role) {
