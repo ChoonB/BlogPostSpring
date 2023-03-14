@@ -4,12 +4,10 @@ import com.sparta.blogpostspring.dto.CommentResponseDto;
 import com.sparta.blogpostspring.dto.MessageResponseDto;
 import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
-import com.sparta.blogpostspring.entity.Comment;
-import com.sparta.blogpostspring.entity.Post;
-import com.sparta.blogpostspring.entity.User;
-import com.sparta.blogpostspring.entity.UserRoleEnum;
+import com.sparta.blogpostspring.entity.*;
 import com.sparta.blogpostspring.jwt.JwtUtil;
 import com.sparta.blogpostspring.repository.CommentRepository;
+import com.sparta.blogpostspring.repository.HeartRepository;
 import com.sparta.blogpostspring.repository.PostRepository;
 import com.sparta.blogpostspring.repository.UserRepository;
 import com.sparta.blogpostspring.security.UserDetailsImpl;
@@ -29,6 +27,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final HeartRepository heartRepository;
 
     // 게시글 id로 DB에서 게시글 찾기
     private Post findPostById(Long PostId){
@@ -87,6 +86,11 @@ public class PostService {
 //        user가 ADMIN이면 모든 게시글 삭제 가능. 아니면 작성자 검증.
         if(user.getRole().equals(UserRoleEnum.ADMIN)){
 //        게시글에 달린 댓글도 다 삭제
+            heartRepository.deleteAllByPost(post);
+            List<Comment> comments= commentRepository.findAllByPost(post);
+            for (Comment comment : comments) {
+                heartRepository.deleteAllByComment(comment);
+            }
             commentRepository.deleteAllByPost(post);
             postRepository.deleteById(PostId);
             return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
@@ -96,6 +100,11 @@ public class PostService {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
 //        게시글에 달린 댓글도 다 삭제
+        heartRepository.deleteAllByPost(post);
+        List<Comment> comments= commentRepository.findAllByPost(post);
+        for (Comment comment : comments) {
+            heartRepository.deleteAllByComment(comment);
+        }
         commentRepository.deleteAllByPost(post);
         postRepository.deleteById(PostId);
         return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);

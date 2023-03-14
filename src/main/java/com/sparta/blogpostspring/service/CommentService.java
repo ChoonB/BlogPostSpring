@@ -9,6 +9,7 @@ import com.sparta.blogpostspring.entity.User;
 import com.sparta.blogpostspring.entity.UserRoleEnum;
 import com.sparta.blogpostspring.jwt.JwtUtil;
 import com.sparta.blogpostspring.repository.CommentRepository;
+import com.sparta.blogpostspring.repository.HeartRepository;
 import com.sparta.blogpostspring.repository.PostRepository;
 import com.sparta.blogpostspring.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -26,6 +27,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final HeartRepository heartRepository;
 
 
     private Post findPostByPostId(Long postId){
@@ -77,12 +79,14 @@ public class CommentService {
         );
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
         if (user.getRole().equals(UserRoleEnum.ADMIN)){
+            heartRepository.deleteAllByComment(comment);
             commentRepository.deleteById(commentId);
             return new MessageResponseDto("댓글을 성공적으로 삭제했습니다.", HttpStatus.OK);
         }
         if (!comment.getUser().getId().equals(user.getId())){
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
+        heartRepository.deleteAllByComment(comment);
         commentRepository.deleteById(commentId);
         return new MessageResponseDto("댓글을 성공적으로 삭제했습니다.", HttpStatus.OK);
     }
