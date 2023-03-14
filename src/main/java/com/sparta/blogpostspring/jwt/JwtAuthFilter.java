@@ -6,9 +6,13 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -30,9 +34,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // token 유효성 검사 token null 일때?
         if (token != null) {
             if (!jwtUtil.validateToken(token)){
-                throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
-//                jwtExceptionHandler(response, "토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-//                return;
+                jwtExceptionHandler(response, "토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
+                return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
             // 인증 객체 생성
@@ -50,17 +53,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(context);
     }
 
-////    토큰 오류 발생시 예외처리
-//    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus httpStatus) {
-//        response.setStatus(httpStatus.value());
-//        response.setContentType("application/json");
-//        try {
-//            String json = new ObjectMapper().writeValueAsString(new MessageResponseDto(msg,httpStatus));
-//            response.getWriter().write(json);
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//        }
-//    }
+//    토큰 오류 발생시 예외처리.
+    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus httpStatus) {
+        response.setStatus(httpStatus.value());
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+        try {
+            String json = new ObjectMapper().writeValueAsString(new MessageResponseDto(msg,httpStatus));
+            response.getWriter().write(json);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
 
 
 
