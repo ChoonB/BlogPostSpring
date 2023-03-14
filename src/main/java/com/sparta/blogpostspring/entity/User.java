@@ -27,10 +27,10 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     private List<Post> postList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
 
 
@@ -40,12 +40,12 @@ public class User {
         this.role = role;
     }
 
-    public void addPostList(Post post){
-        this.postList.add(post);
-    }
-
-    public void addCommentList(Comment comment){
-        this.commentList.add(comment);
-    }
+//    public void addPostList(Post post){
+//        this.postList.add(post);
+//    }
+//
+//    public void addCommentList(Comment comment){
+//        this.commentList.add(comment);
+//    }
 
 }

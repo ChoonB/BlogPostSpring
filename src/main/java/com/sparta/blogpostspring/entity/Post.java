@@ -28,7 +28,7 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
 
 
@@ -37,7 +37,7 @@ public class Post extends Timestamped{
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.user = user;
-        user.addPostList(this);
+        user.getPostList().add(this);
     }
 
 //    타임스탬프 2요소 게터 생성
@@ -55,9 +55,9 @@ public class Post extends Timestamped{
         this.content = postRequestDto.getContent();
     }
 
-    public void addCommentList(Comment comment){
-        this.commentList.add(comment);
-    }
+//    public void addCommentList(Comment comment){
+//        this.commentList.add(comment);
+//    }
 
 
 }
