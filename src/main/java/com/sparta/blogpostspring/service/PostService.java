@@ -53,7 +53,7 @@ public class PostService {
     @Transactional
     public PostResponseDto createPost(PostRequestDto postRequestDto, User user) {
         Post post = new Post(postRequestDto, user);
-        postRepository.save(post);
+        postRepository.saveAndFlush(post);
         return new PostResponseDto(post);
     }
 
@@ -68,16 +68,12 @@ public class PostService {
     @Transactional
     public PostResponseDto update(Long PostId, PostRequestDto postRequestDto, User user) {
         Post post = findPostById(PostId);
-        System.out.println("" + user.getId());
-        System.out.println(user.getUsername());
-        System.out.println("" + post.getUser().getId());
-        System.out.println(post.getUser().getId());
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
         if(user.getRole().equals(UserRoleEnum.ADMIN)) {
             post.update(postRequestDto);
             return new PostResponseDto(post);
         }
-        if (!user.equals(post.getUser())) {
+        if (!user.getId().equals(post.getUser().getId())) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         post.update(postRequestDto);
@@ -96,7 +92,7 @@ public class PostService {
             return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
         }
 
-        if (!post.getUser().equals(user)) {
+        if (!post.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
 //        게시글에 달린 댓글도 다 삭제
