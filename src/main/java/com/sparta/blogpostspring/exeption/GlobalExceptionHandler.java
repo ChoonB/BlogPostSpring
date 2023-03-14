@@ -27,6 +27,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(messageResponseDto, messageResponseDto.getStatus());
     }
 
+    @ExceptionHandler
+    public ResponseEntity<MessageResponseDto> handleException(Exception e){
+        MessageResponseDto messageResponseDto = new MessageResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(messageResponseDto, messageResponseDto.getStatus());
+    }
+
 
 
 }
