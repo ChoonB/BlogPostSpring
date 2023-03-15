@@ -1,9 +1,13 @@
 package com.sparta.blogpostspring.dto;
 
 import com.sparta.blogpostspring.entity.Comment;
+import com.sparta.blogpostspring.entity.SubComment;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Getter
 public class CommentResponseDto {
@@ -14,6 +18,7 @@ public class CommentResponseDto {
     private int heartCount;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private List<SubCommentResponseDto> subCommentList = new ArrayList<>();
 
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
@@ -22,5 +27,18 @@ public class CommentResponseDto {
         this.heartCount = comment.getHeartCount();
         this.createdAt = comment.getCreatedAt();
         this.modifiedAt = comment.getModifiedAt();
+
+        List<SubComment> comments = comment.getSubCommentList();
+        if (!comments.isEmpty()){
+            List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
+            for (SubComment subComment : comments) {
+                subCommentResponseDtoList.add(new SubCommentResponseDto(subComment));
+            }
+            subCommentResponseDtoList.sort(Comparator.comparing(SubCommentResponseDto::getCreatedAt).reversed());
+            this.subCommentList = subCommentResponseDtoList;
+        }
+
     }
+
+
 }
