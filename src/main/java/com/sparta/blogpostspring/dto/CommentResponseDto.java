@@ -28,10 +28,10 @@ public class CommentResponseDto {
         this.createdAt = comment.getCreatedAt();
         this.modifiedAt = comment.getModifiedAt();
 
-        List<SubComment> comments = comment.getSubCommentList();
-        if (!comments.isEmpty()){
+        List<SubComment> subComments = comment.getSubCommentList();
+        if (!subComments.isEmpty()){
             List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
-            for (SubComment subComment : comments) {
+            for (SubComment subComment : subComments) {
                 subCommentResponseDtoList.add(new SubCommentResponseDto(subComment));
             }
             subCommentResponseDtoList.sort(Comparator.comparing(SubCommentResponseDto::getCreatedAt).reversed());

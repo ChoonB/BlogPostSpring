@@ -6,6 +6,7 @@ import com.sparta.blogpostspring.dto.SubCommentResponseDto;
 import com.sparta.blogpostspring.entity.*;
 import com.sparta.blogpostspring.repository.CommentRepository;
 import com.sparta.blogpostspring.repository.HeartRepository;
+import com.sparta.blogpostspring.repository.PostRepository;
 import com.sparta.blogpostspring.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SubCommentService {
 
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final SubCommentRepository subCommentRepository;
     private final HeartRepository heartRepository;
 
     @Transactional
-    public SubCommentResponseDto createSubComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
+    public SubCommentResponseDto createSubComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
+        );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );
@@ -33,7 +38,10 @@ public class SubCommentService {
     }
 
     @Transactional
-    public SubCommentResponseDto updateSubComment(Long commentId, Long subCommentId, CommentRequestDto commentRequestDto, User user) {
+    public SubCommentResponseDto updateSubComment(Long postId, Long commentId, Long subCommentId, CommentRequestDto commentRequestDto, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
+        );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );
@@ -49,7 +57,10 @@ public class SubCommentService {
     }
 
     @Transactional
-    public MessageResponseDto deleteSubComment(Long commentId, Long subCommentId, User user) {
+    public MessageResponseDto deleteSubComment(Long postId, Long commentId, Long subCommentId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
+        );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );

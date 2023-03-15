@@ -49,7 +49,10 @@ public class HeartService {
 
 //    댓글 좋아요
     @Transactional
-    public MessageResponseDto pressCommentHeart(Long commentId, User user) {
+    public MessageResponseDto pressCommentHeart(Long postId, Long commentId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
+        );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );
@@ -73,7 +76,13 @@ public class HeartService {
     }
 
     @Transactional
-    public MessageResponseDto pressSubCommentHeart(Long subCommentId, User user) {
+    public MessageResponseDto pressSubCommentHeart(Long postId, Long commentId, Long subCommentId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
+        );
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
+        );
         SubComment subComment = subCommentRepository.findById(subCommentId).orElseThrow(
                 () -> new IllegalArgumentException("대댓글을 찾을 수 없습니다.")
         );

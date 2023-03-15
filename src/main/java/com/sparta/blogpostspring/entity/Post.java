@@ -29,7 +29,7 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<Comment> commentList = new ArrayList<>();
 
     private int heartCount = 0;

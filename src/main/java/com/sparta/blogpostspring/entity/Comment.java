@@ -32,8 +32,8 @@ public class Comment extends Timestamped{
     @NotBlank
     private String content;
 
-    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER)
-    private List<SubComment> subCommentList;
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
+    private List<SubComment> subCommentList = new ArrayList<>();
 
     private int heartCount = 0;
 

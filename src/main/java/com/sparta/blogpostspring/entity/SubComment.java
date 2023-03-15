@@ -34,6 +34,7 @@ public class SubComment extends Timestamped{
     public SubComment(User user, Comment comment, CommentRequestDto commentRequestDto) {
         this.user = user;
         this.comment = comment;
+        comment.getSubCommentList().add(this);
         this.content = commentRequestDto.getContent();
     }
 
