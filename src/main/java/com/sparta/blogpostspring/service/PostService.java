@@ -6,10 +6,7 @@ import com.sparta.blogpostspring.dto.PostRequestDto;
 import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.entity.*;
 import com.sparta.blogpostspring.jwt.JwtUtil;
-import com.sparta.blogpostspring.repository.CommentRepository;
-import com.sparta.blogpostspring.repository.HeartRepository;
-import com.sparta.blogpostspring.repository.PostRepository;
-import com.sparta.blogpostspring.repository.UserRepository;
+import com.sparta.blogpostspring.repository.*;
 import com.sparta.blogpostspring.security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +25,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final HeartRepository heartRepository;
+    private final SubCommentRepository subCommentRepository;
 
     // 게시글 id로 DB에서 게시글 찾기
     private Post findPostById(Long PostId){
@@ -68,11 +66,7 @@ public class PostService {
     public PostResponseDto update(Long PostId, PostRequestDto postRequestDto, User user) {
         Post post = findPostById(PostId);
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
-        if(user.getRole().equals(UserRoleEnum.ADMIN)) {
-            post.update(postRequestDto);
-            return new PostResponseDto(post);
-        }
-        if (!user.getId().equals(post.getUser().getId())) {
+        if (!user.getId().equals(post.getUser().getId()) && !user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         post.update(postRequestDto);
@@ -84,30 +78,24 @@ public class PostService {
     public MessageResponseDto deletePost(Long PostId, User user) {
         Post post = findPostById(PostId);
 //        user가 ADMIN이면 모든 게시글 삭제 가능. 아니면 작성자 검증.
-        if(user.getRole().equals(UserRoleEnum.ADMIN)){
-//        게시글에 달린 댓글도 다 삭제
-            heartRepository.deleteAllByPost(post);
-            List<Comment> comments= commentRepository.findAllByPost(post);
-            for (Comment comment : comments) {
-                heartRepository.deleteAllByComment(comment);
-            }
-            commentRepository.deleteAllByPost(post);
-            postRepository.deleteById(PostId);
-            return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
-        }
-
-        if (!post.getUser().getId().equals(user.getId())) {
+        if (!post.getUser().getId().equals(user.getId()) && !user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
-//        게시글에 달린 댓글도 다 삭제
+        //        게시글에 달린 댓글도 다 삭제 + 대댓글과 관련 좋아요도 삭제
         heartRepository.deleteAllByPost(post);
         List<Comment> comments= commentRepository.findAllByPost(post);
         for (Comment comment : comments) {
             heartRepository.deleteAllByComment(comment);
+            List<SubComment> subComments = subCommentRepository.findAllByComment(comment);
+            for (SubComment subComment : subComments) {
+                heartRepository.deleteAllBySubComment(subComment);
+            }
+            subCommentRepository.deleteAllByComment(comment);
         }
         commentRepository.deleteAllByPost(post);
         postRepository.deleteById(PostId);
         return new MessageResponseDto("게시글을 삭제했습니다.", HttpStatus.OK);
+
     }
 
 }

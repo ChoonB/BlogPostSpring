@@ -57,11 +57,7 @@ public class CommentService {
         );
 
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
-        if (user.getRole().equals(UserRoleEnum.ADMIN)) {
-            comment.update(commentRequestDto);
-            return new CommentResponseDto(comment);
-        }
-        if (!comment.getUser().getId().equals(user.getId())) {
+        if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         comment.update(commentRequestDto);
@@ -78,12 +74,7 @@ public class CommentService {
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );
 //        user가 ADMIN이면 모든 게시글 수정 가능. 아니면 작성자 검증
-        if (user.getRole().equals(UserRoleEnum.ADMIN)){
-            heartRepository.deleteAllByComment(comment);
-            commentRepository.deleteById(commentId);
-            return new MessageResponseDto("댓글을 성공적으로 삭제했습니다.", HttpStatus.OK);
-        }
-        if (!comment.getUser().getId().equals(user.getId())){
+        if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(UserRoleEnum.ADMIN)){
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
         heartRepository.deleteAllByComment(comment);
