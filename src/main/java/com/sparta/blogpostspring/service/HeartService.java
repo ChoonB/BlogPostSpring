@@ -1,13 +1,11 @@
 package com.sparta.blogpostspring.service;
 
 import com.sparta.blogpostspring.dto.MessageResponseDto;
-import com.sparta.blogpostspring.entity.Comment;
-import com.sparta.blogpostspring.entity.Heart;
-import com.sparta.blogpostspring.entity.Post;
-import com.sparta.blogpostspring.entity.User;
+import com.sparta.blogpostspring.entity.*;
 import com.sparta.blogpostspring.repository.CommentRepository;
 import com.sparta.blogpostspring.repository.HeartRepository;
 import com.sparta.blogpostspring.repository.PostRepository;
+import com.sparta.blogpostspring.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,7 @@ public class HeartService {
     private final HeartRepository heartRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final SubCommentRepository subCommentRepository;
 
 //    게시글 좋아요
     @Transactional
@@ -71,5 +70,30 @@ public class HeartService {
         heartRepository.saveAndFlush(heart);
         comment.setHeartCount(heartList.size()+1);
         return new MessageResponseDto("해당 댓글에 좋아요를 눌렀습니다.", HttpStatus.OK);
+    }
+
+    @Transactional
+    public MessageResponseDto pressSubCommentHeart(Long subCommentId, User user) {
+        SubComment subComment = subCommentRepository.findById(subCommentId).orElseThrow(
+                () -> new IllegalArgumentException("대댓글을 찾을 수 없습니다.")
+        );
+
+        List<Heart> heartList = heartRepository.findAllBySubComment(subComment);
+        //        이미 좋아요 눌렀으면 좋아요 누른 기록 없에고 좋아요 숫자 -1
+        if (!heartList.isEmpty()) {
+            for (Heart heart : heartList) {
+                if (heart.getUser().getId().equals(user.getId())) {
+                    heartRepository.delete(heart);
+                    subComment.setHeartCount(heartList.size()-1);
+                    return new MessageResponseDto("해당 댓글에 '좋아요'를 취소했습니다.", HttpStatus.OK);
+                }
+            }
+        }
+        //        좋아요 안눌렀으면 좋아요 기록 추가하고 숫자 +1
+        Heart heart = new Heart(subComment, user);
+        heartRepository.saveAndFlush(heart);
+        subComment.setHeartCount(heartList.size()+1);
+        return new MessageResponseDto("해당 댓글에 좋아요를 눌렀습니다.", HttpStatus.OK);
+
     }
 }

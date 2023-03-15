@@ -29,5 +29,11 @@ public class HeartController {
         return heartService.pressCommentHeart(commentId, userDetails.getUser());
     }
 
+//    3. 대댓글 좋아요. 관리자는 좋아요 x
+    @Secured("ROLE_USER")
+    @GetMapping("/{postId}/comment/{commentId}/subcomment/{subCommentId}/heart")
+    public MessageResponseDto pressSubCommentHeart(@PathVariable Long subCommentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return heartService.pressSubCommentHeart(subCommentId, userDetails.getUser());
+    }
 
 }
