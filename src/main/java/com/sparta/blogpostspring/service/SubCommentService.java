@@ -40,13 +40,8 @@ public class SubCommentService {
         SubComment subComment = subCommentRepository.findById(subCommentId).orElseThrow(
                 () -> new IllegalArgumentException("대댓글을 찾을 수 없습니다.")
         );
-
 //        User ADMIN 검증
-        if (user.getRole().equals(UserRoleEnum.ADMIN)) {
-            subComment.update(commentRequestDto);
-            return new SubCommentResponseDto(subComment);
-        }
-        if (!subComment.getUser().getId().equals(user.getId())) {
+        if (!subComment.getUser().getId().equals(user.getId()) && !user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         subComment.update(commentRequestDto);
@@ -61,15 +56,10 @@ public class SubCommentService {
         SubComment subComment = subCommentRepository.findById(subCommentId).orElseThrow(
                 () -> new IllegalArgumentException("대댓글을 찾을 수 없습니다.")
         );
-        if (user.getRole().equals(UserRoleEnum.ADMIN)) {
-//            heartRepository
-            subCommentRepository.deleteById(subCommentId);
-            return new MessageResponseDto("대댓글을 성공적으로 삭제했습니다.", HttpStatus.OK);
-        }
-        if (!subComment.getUser().getId().equals(user.getId())) {
+        if (!subComment.getUser().getId().equals(user.getId()) && !user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
-//        heartRepository
+        heartRepository.deleteAllBySubComment(subComment);
         subCommentRepository.deleteById(subCommentId);
         return new MessageResponseDto("대댓글을 성공적으로 삭제했습니다.", HttpStatus.OK);
     }
