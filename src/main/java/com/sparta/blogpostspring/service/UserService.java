@@ -71,4 +71,28 @@ public class UserService {
 
         return new MessageResponseDto("로그인에 성공하였습니다.", HttpStatus.OK);
     }
+
+    @Transactional
+    public MessageResponseDto withdraw(LoginRequestDto loginRequestDto, User user) {
+        String username = loginRequestDto.getUsername();
+        String password = loginRequestDto.getPassword();
+
+        //사용자 다시 확인
+        User userB = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("회원을 찾을 수 없습니다.")
+        );
+
+        if (!userB.getId().equals(user.getId())){
+            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+        }
+
+        // 비밀번호 다시 확인
+        if(!passwordEncoder.matches(password, userB.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        userRepository.deleteById(user.getId());
+        return new MessageResponseDto("회원탈퇴가 정상적으로 진행되었습니다.", HttpStatus.OK);
+
+    }
 }
