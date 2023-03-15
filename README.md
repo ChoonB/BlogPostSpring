@@ -9,7 +9,8 @@ BlogPostSpring은 아래의 LV.3과제에 Spring Security를 적용하고 게시
 API명세서 주소 : <https://documenter.getpostman.com/view/26067913/2s93Juu3ic>
 
 230314 현재 Lv.3의 모든 기능 구현 완료 상태에서 추가적으로 수정 진행하였으며, 게시글과 댓글에 좋아요 기능 구현하고,
-Spring Security 적용했습니다. 현재 H2 DB에 연결중입니다.
+Spring Security 적용했습니다. 현재 H2 DB에 연결중입니다. 
+230315 현재 대댓글 기능과 회원탈퇴 기능 추가했습니다.
 
 -----------------------------------
 
