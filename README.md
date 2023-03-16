@@ -4,7 +4,7 @@ BlogPostSpring은 아래의 LV.3과제에 Spring Security를 적용하고 게시
 
 ### ERD
 
-![ERD 2차](https://user-images.githubusercontent.com/97417978/224954992-56e45fa9-f84d-4f11-a979-b6de3d759d6e.JPG)
+![ERD 3차](https://user-images.githubusercontent.com/97417978/225267235-b0650fe9-bca3-4f5e-b1ab-5d368eef2a67.JPG)
 
 API명세서 주소 : <https://documenter.getpostman.com/view/26067913/2s93Juu3ic>
 
