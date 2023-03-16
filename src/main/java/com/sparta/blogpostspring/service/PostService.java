@@ -10,6 +10,10 @@ import com.sparta.blogpostspring.repository.*;
 import com.sparta.blogpostspring.security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,13 +42,21 @@ public class PostService {
 
     //  1. 전체게시글 조회 메서드
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getPosts() {
-        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
-        for (Post post : postList) {
-            postResponseDtoList.add(new PostResponseDto(post));
-        }
-        return postResponseDtoList;
+    public Page<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Post> postPage = postRepository.findAll(pageable);
+        Page<PostResponseDto> responseDtoPage = postPage.map(PostResponseDto::new);
+        return responseDtoPage;
+
+        //        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+//        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
+//        for (Post post : postList) {
+//            postResponseDtoList.add(new PostResponseDto(post));
+//        }
+//        postResponseDtoList
     }
 
 
