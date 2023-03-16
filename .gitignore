@@ -8,8 +8,7 @@ gradle
 gradlew
 gradlew.bat
 settings.gradle
-build.gradle
-src/test
+
 application.properties
 
 
