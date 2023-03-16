@@ -14,4 +14,6 @@ public class PostRequestDto {
 
     @NotBlank
     private String content;
+
+
 }
