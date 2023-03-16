@@ -31,10 +31,7 @@ public class CommentService {
 
 
     private Post findPostByPostId(Long postId){
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
-        );
-        return post;
+        return postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
     }
 
 //    1. 댓글작성 메서드
