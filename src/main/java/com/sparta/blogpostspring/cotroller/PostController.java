@@ -6,6 +6,7 @@ import com.sparta.blogpostspring.dto.PostResponseDto;
 import com.sparta.blogpostspring.security.UserDetailsImpl;
 import com.sparta.blogpostspring.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,11 @@ public class PostController {
 
 //    1. 전체게시글 조회 API
     @GetMapping("/posts")
-    public List<PostResponseDto> getPosts() {
-        return postService.getPosts();
+    public Page<PostResponseDto> getPosts(@RequestParam("page") int page,
+                                          @RequestParam("size") int size,
+                                          @RequestParam("sortBy") String sortBy,
+                                          @RequestParam("isAsc") boolean isAsc) {
+        return postService.getPosts(page-1, size, sortBy, isAsc);
     }
 
 //    2. 게시글 작성 API
