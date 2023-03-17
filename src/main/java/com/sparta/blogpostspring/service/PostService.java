@@ -50,13 +50,6 @@ public class PostService {
         Page<Post> postPage = postRepository.findAll(pageable);
         Page<PostResponseDto> responseDtoPage = postPage.map(PostResponseDto::new);
         return responseDtoPage;
-
-        //        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-//        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
-//        for (Post post : postList) {
-//            postResponseDtoList.add(new PostResponseDto(post));
-//        }
-//        postResponseDtoList
     }
 
 
