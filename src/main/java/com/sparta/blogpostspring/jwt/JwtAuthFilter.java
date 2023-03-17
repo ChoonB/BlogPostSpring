@@ -53,19 +53,4 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(context);
     }
 
-//    토큰 오류 발생시 예외처리.
-//    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus httpStatus) {
-//        response.setStatus(httpStatus.value());
-//        response.setCharacterEncoding("UTF-8");
-//        response.setContentType("application/json; charset=UTF-8");
-//        try {
-//            String json = new ObjectMapper().writeValueAsString(new MessageResponseDto(msg,httpStatus));
-//            response.getWriter().write(json);
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//        }
-//    }
-
-
-
 }
