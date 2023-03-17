@@ -36,8 +36,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (token != null) {
             if (!jwtUtil.validateToken(token)){
                 throw new JwtException("토큰이 유효하지 않습니다.");
-//                jwtExceptionHandler(response, "토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
-//                return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
             // 인증 객체 생성
