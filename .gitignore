@@ -11,6 +11,8 @@ settings.gradle
 
 application.properties
 
+jasypt-encryptor-password.txt
+
 
 ### STS ###
 .apt_generated

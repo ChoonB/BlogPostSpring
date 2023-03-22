@@ -1,0 +1,67 @@
+spring:
+  profiles:
+    active: h2
+---
+
+#H2-console
+spring:
+  config:
+    activate:
+      on-profile: h2
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+#    url: jdbc:h2:mem:db;MODE=MYSQL
+    url: ENC(2rZLT5CfY0wpQKHSspsCla8dr7xLHwm90rA25Hfhd15P3ribWWAeuA==)
+    username: sa
+    password:
+
+    # refresh
+  thymeleaf:
+    cache: false
+
+    # Swagger plus option
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+#  jwt.secret.key
+jwt:
+  secret:
+    key: 7ZWt7ZW0OTntmZTsnbTtjIXtlZzqta3snYTrhIjrqLjshLjqs4TroZzrgpjslYTqsIDsnpDtm4zrpa3tlZzqsJzrsJzsnpDrpbzrp4zrk6TslrTqsIDsnpA=
+---
+
+#MySQL - AWS RDS
+spring:
+  config:
+    activate:
+      on-profile: mysql
+
+#  MySQL
+  datasource:
+    url: ENC(rIjClTrlqE9JDMQee392oMPNXy6nii4hbmSmKq1yFWyTPAncE51SyYCwjOOmrbRGWMADcxUuckPqL6x1C/HtqrzEbivztz0Ln8uD4ssLiazh2dgm1qkf+BL0QVAErttHmk/7RsrXNbH7eOVbnuxjjA==)
+    username: ENC(lNByPZD8RPizld5UF0Vftg==)
+    password: ENC(zpbTaV/bZaU2YHSt8eoJPgPUz7XqQwnJ)
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    # refresh
+  thymeleaf:
+    cache: false
+
+    # Swagger plus option
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+#  jwt.secret.key
+jwt:
+  secret:
+    key: 7ZWt7ZW0OTntmZTsnbTtjIXtlZzqta3snYTrhIjrqLjshLjqs4TroZzrgpjslYTqsIDsnpDtm4zrpa3tlZzqsJzrsJzsnpDrpbzrp4zrk6TslrTqsIDsnpA=
+
+
